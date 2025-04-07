@@ -1,6 +1,7 @@
 package com.userManagement.controller;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,8 +32,9 @@ public class UserController {
 	public ResponseEntity<String> login(@RequestBody UserDto userDto) {
 		Authentication authentication = null;
 		try {
+			String userName = userDto.getEmail() != null ? userDto.getEmail() : userDto.getPhoneNumber();
 			authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
+					.authenticate(new UsernamePasswordAuthenticationToken(userName, userDto.getPassword()));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Login failed: " + e.getMessage());
 		}
@@ -45,7 +47,7 @@ public class UserController {
 
 	@PostMapping("/register")
 	public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto userDTO) {
-		return ResponseEntity.ok(userService.registerUser(userDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userDTO));
 	}
 
 	@GetMapping("/test")
