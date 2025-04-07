@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,13 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+		log.warn("Constraint Violation: {}", ex.getMessage());
+
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
 		log.warn("Constraint Violation: {}", ex.getMessage());
 
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);

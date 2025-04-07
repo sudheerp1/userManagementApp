@@ -7,6 +7,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +50,21 @@ public class UserController {
 	@PostMapping("/register")
 	public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto userDTO) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userDTO));
+	}
+
+	@PatchMapping("/update")
+	public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDTO) {
+		return ResponseEntity.status(HttpStatus.OK).body(userService.registerUser(userDTO));
+	}
+
+	@PatchMapping("/deactivate/{id}")
+	public ResponseEntity<String> deactivateUser(@PathVariable long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(userService.deactivateUser(id));
+	}
+
+	@PatchMapping("/delete/{id}")
+	public ResponseEntity<String> deleteUser(@PathVariable long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser(id));
 	}
 
 	@GetMapping("/test")
