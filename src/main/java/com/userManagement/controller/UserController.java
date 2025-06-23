@@ -1,5 +1,6 @@
 package com.userManagement.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.userManagement.dto.EmailRequest;
 import com.userManagement.dto.UserDto;
 import com.userManagement.security.JwtUtil;
+import com.userManagement.service.EmailService;
 import com.userManagement.service.UserService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +32,21 @@ public class UserController {
 	private final AuthenticationManager authenticationManager;
 	private final JwtUtil jwtUtil;
 	private final UserService userService;
+	@Autowired
+	private EmailService emailService;
+
+	@PostMapping("/forgot-password")
+	public ResponseEntity<String> forgotPassword(@RequestBody EmailRequest request) {
+		String email = request.getEmail();
+
+		// Generate 6-digit OTP
+		String otp = String.valueOf((int) ((Math.random() * 900000) + 100000));
+
+		// Async call to send email
+		emailService.sendPasswordResetOtp(email, otp);
+
+		return ResponseEntity.ok("An email with OTP has been sent to reset your password.");
+	}
 
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody UserDto userDto) {
