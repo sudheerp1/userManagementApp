@@ -97,6 +97,13 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.CONFLICT);
 	}
 
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+		Map<String, String> error = new HashMap<>();
+		error.put("error", ex.getMessage());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
+
 	// 7. Fallback for unexpected errors
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Map<String, String>> handleGlobalException(Exception ex, WebRequest request) {

@@ -1,5 +1,7 @@
 package com.userManagement.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,5 +38,7 @@ public class User {
 	@Column(nullable = false)
 	@Builder.Default
 	private boolean enabled = true;
+	private String otp;
+	private LocalDateTime otpGeneratedAt;
 
 }
